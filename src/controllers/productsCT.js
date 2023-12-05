@@ -45,6 +45,14 @@ export class ProductCT {
     }
     static async updateOne(req, res){
         const {id} = req.params;
+        const isValidID = isValidUUID(id);
+        if (!isValidID) return res.status(422).json({message: "not valid ID"});
+        const [isProduct, _info] = await ProductMD.getById(id);
 
+        if (!isProduct) return res.status(404).json({message: "Product not found"})
+        const updatedProduct = await ProductMD.updateOne(id, req.body)
+        !updatedProduct?
+        res.status(500).json({message: "Internal server error"})
+        : res.status(200).json({message: "Products Updated"})
     }
 }

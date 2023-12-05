@@ -1,4 +1,4 @@
-import {connection} from "../../db_config.js"
+import {connection} from "../database/db_config.js"
 
 export class ProductMD {
 
@@ -30,6 +30,7 @@ export class ProductMD {
     }
     //devuelve por id
     static async getById(id) {
+        //replantear si cambiar products por result
         const [products, _info] = await connection.query(`SELECT brand, image, price, stock, title, category, BIN_TO_UUID(id) as id FROM products WHERE id = UUID_TO_BIN(?)`, [id]);
         return products;
     }
@@ -44,5 +45,15 @@ export class ProductMD {
         const result = await connection.query(`INSERT INTO products (brand, image, price, stock, title, category) VALUES (?,?,?,?,?,?)`,[brand, image, price, stock, title, category]);
         return result ? result : null;
 
+    }
+    //edita un objeto
+    static async updateOne(id, partialProducts){
+        let queryString = "";
+        for (const key in partialProducts) {
+            queryString += `${key} = '${partialProducts[key]}', `
+        }
+        queryString = queryString.slice(0, -2);
+        const [result, _info] = await connection.query(`UPDATE products SET ${queryString} WHERE products.id = UUID_TO_BIN(?)`,[id]);
+        return result.affectedRows;
     }
 }
