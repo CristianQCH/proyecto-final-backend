@@ -1,5 +1,7 @@
 import { ProductMD } from "../models/productsMD.js";
 import { isValidUUID } from "../utils/isValidUUID.js";
+// import { deleteImage } from "../utils/deleteImage.js";
+// import path from "node:path";
 
 export class ProductCT {
     static async getAll(req, res){
@@ -10,6 +12,7 @@ export class ProductCT {
         :res.status(404).json({message: "Product not found"})
     };
 
+
     static async getAllForTitle(req, res){
         const {title} = req.params;
         const productTitle = await ProductMD.getAllForTitle(title);
@@ -17,6 +20,7 @@ export class ProductCT {
         ? res.status(404).json({message: "Product by title not found"})
         : res.status(200).json(productTitle)
     };
+
 
     static async getById(req, res) {
         const {id} = req.params;
@@ -27,22 +31,28 @@ export class ProductCT {
         if (!product.length) return res.status(404).json({message: "Product by id not found"});
         res.status(200).json(product);
     };
+    
 
     static async deleteOne(req, res){
         const {id} = req.params;
         const isValidID = isValidUUID(id);
         if (!isValidID) return res.status(422).json({message: "not valid ID"});
-        //sucede el mismo problema que en el getById
+
+
         const result = await ProductMD.deleteOne(id);
-        if (!result) return res.status(404).json({message: "Product para eliminar not found"})
-        res.status(200).json({message: "Borrado exitoso"})
+        if (!result) return res.status(404).json({message: "Product not found"})
+        res.sendStatus(204)
     }
+
+
     static async addOne(req, res){
         const productCreated = await ProductMD.addOne(req.body);
         productCreated
         ? res.status(201).json({message: "Product created"})
         : res.status(500).json({message: "Internal server error"})
     }
+
+
     static async updateOne(req, res){
         const {id} = req.params;
         const isValidID = isValidUUID(id);
@@ -53,6 +63,6 @@ export class ProductCT {
         const updatedProduct = await ProductMD.updateOne(id, req.body)
         !updatedProduct?
         res.status(500).json({message: "Internal server error"})
-        : res.status(200).json({message: "Products Updated"})
+        : res.status(200).json({message: "Product Updated"})
     }
 }

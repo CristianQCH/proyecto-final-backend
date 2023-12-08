@@ -28,7 +28,7 @@ export class ProductMD {
         const [products, _info] = await connection.query(sql, [searchByTitle]);
         return products.length ? products : null;
     }
-    //devuelve por id
+    //identificador por id disponible para metodos
     static async getById(id) {
         //replantear si cambiar products por result
         const [products, _info] = await connection.query(`SELECT brand, image, price, stock, title, category, BIN_TO_UUID(id) as id FROM products WHERE id = UUID_TO_BIN(?)`, [id]);
@@ -46,7 +46,7 @@ export class ProductMD {
         return result ? result : null;
 
     }
-    //edita un objeto
+    //edita un objeto por id
     static async updateOne(id, partialProducts){
         let queryString = "";
         for (const key in partialProducts) {
