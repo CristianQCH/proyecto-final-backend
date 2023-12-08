@@ -18,5 +18,13 @@ Descripcion:
 
 La API cumple con las caracteristicas de las operaciones CRUD (listar(leer), crear, actualizar y borrar)
 
-Proximas funciones en proceso
+Proximas funciones en proceso:
+
+--subir y eliminar archivos
+
+--login de usuarios
+
+--encriptacion de contraseñas
+
+--uso de JWT
 
